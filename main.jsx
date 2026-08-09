@@ -97,7 +97,101 @@ function Booking() {
                 <input
                   name="date"
                   required
-                  type
+                  type="date"
+
+                />
+
+              </label>
+
+              <label>
+
+                ВРЕМЯ
+
+                <input
+
+                  name="time"
+
+                  required
+
+                  type="time"
+
+                />
+
+              </label>
+
+            </div>
+
+            <div className="two">
+
+              <label>
+
+                ГОСТИ
+
+                <input
+
+                  name="guests"
+
+                  required
+
+                  type="number"
+
+                  min="1"
+
+                  max="12"
+
+                  placeholder="2"
+
+                />
+
+              </label>
+
+              <label>
+
+                ТЕЛЕФОН
+
+                <input
+
+                  name="phone"
+
+                  required
+
+                  type="tel"
+
+                  placeholder="+7 ___ ___ __ __"
+
+                />
+
+              </label>
+
+            </div>
+
+            <button
+
+              className="submit"
+
+              type="submit"
+
+              disabled={loading}
+
+            >
+
+              {loading ? "ОТПРАВКА..." : "ЗАБРОНИРОВАТЬ"}
+
+              {!loading && <ArrowUpRight />}
+
+            </button>
+
+          </form>
+
+        )}
+
+      </div>
+
+    </section>
+
+  );
+
+}
 function Location(){return <section id="contact" className="location"><div className="map-art"><div className="map-lines"/><div className="pin"><MapPin/></div><span>45.0228° N<br/>38.9700° E</span></div><div className="location-copy"><span className="eyebrow">04 / FIND US</span><h2>МОНА<span>&</span>КО</h2><p className="address">ул. Домбайская 55к7</p><div className="hours"><span><Clock3/> ПН–ПТ</span><b>09:00–21:00</b><span><Clock3/> СБ–ВС</span><b>09:00–21:00</b></div><a className="route" href="https://yandex.ru/maps/?text=ул.%20Домбайская%2055к7" target="_blank" rel="noreferrer" data-cursor="OPEN">ПОСТРОИТЬ МАРШРУТ <Navigation/></a><a className="phone" href="tel:+70000000000"><Phone/> +7 ХХХ ХХХ ХХ ХХ</a></div></section>}
 function Footer(){return <footer><div className="footer-big">МОНА<span>&</span>КО</div><div className="footer-row"><p>Кофе, который<br/>остаётся с вами.</p><div className="socials"><a href="#">Camera</a><a href="#">Telegram</a><a href="#">VK</a></div><span>© {new Date().getFullYear()} MONA&KO</span></div></footer>}
 function App(){const [open,setOpen]=useState(false);useEffect(()=>{const pre=document.querySelector('.preloader');const t=setTimeout(()=>pre?.classList.add('done'),1500);return()=>clearTimeout(t)},[]);return <><div className="preloader"><div className="pre-dot"/><div className="pre-line"/><div className="pre-logo">МОНА<span>&</span>КО</div></div><Cursor/><Navbar open={open} setOpen={setOpen}/><main><Hero/><Marquee/><Menu/><Philosophy/><Marquee reverse/><Atmosphere/><Booking/><Location/></main><Footer/></>}
