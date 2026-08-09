@@ -20,7 +20,89 @@ function Marquee({reverse=false}){return <div className={'marquee '+(reverse?'re
 function Menu(){const [cat,setCat]=useState('COFFEE');return <section id="menu" className="menu-section"><Reveal><div className="section-head"><div><span className="eyebrow">01 / MENU</span><h2>Выбери<br/><em>своё.</em></h2></div><p>Меню меняется вместе с настроением. Чистые вкусы, неожиданные сочетания и никакой случайности.</p></div></Reveal><div className="cat-row">{Object.keys(menu).map(c=><button key={c} className={cat===c?'selected':''} onClick={()=>setCat(c)}>{c}</button>)}</div><motion.div layout className="menu-stage">{menu[cat].map(([name,desc,price,symbol],i)=><motion.article layout key={name} className="menu-item" initial={{opacity:0,y:30}} animate={{opacity:1,y:0}} transition={{delay:i*.07}} data-cursor="VIEW"><div className="dish-art"><span>{symbol}</span><i/></div><div className="dish-info"><span className="index">0{i+1}</span><div><h3>{name}</h3><p>{desc}</p></div><strong>{price}</strong></div></motion.article>)}</motion.div></section>}
 function Philosophy(){return <section id="philosophy" className="philosophy"><Reveal><span className="eyebrow">02 / ATTITUDE</span><h2>НЕ ПРОСТО<br/><span>КОФЕ.</span></h2><p>Мы любим хороший кофе, красивые места и разговоры, которые внезапно длятся три часа.</p></Reveal><div className="philosophy-mark">M<span>&</span>K</div></section>}
 function Atmosphere(){return <section className="atmosphere"><Reveal><div className="atmo-card atmo-one"><div className="noise"/><span>01 — MORNING</span><b>Тихий свет.<br/>Первый глоток.</b></div></Reveal><Reveal><div className="atmo-card atmo-two"><span>02 — AFTERNOON</span><b>Город шумит.<br/>Мы — нет.</b></div></Reveal><Reveal><div className="atmo-card atmo-three"><span>03 — NIGHT</span><b>Музыка громче.<br/>Разговоры дольше.</b></div></Reveal></section>}
-function Booking(){const [sent,setSent]=useState(false);const submit=e=>{e.preventDefault();setSent(true)};return <section id="booking" className="booking"><div className="booking-title"><span className="eyebrow">03 / RESERVATION</span><h2>ЗАБРОНИРОВАТЬ<br/><em>СТОЛ</em></h2></div><div className="booking-panel">{sent?<motion.div className="success" initial={{opacity:0,scale:.95}} animate={{opacity:1,scale:1}}><span>✓</span><h3>Место за вами.</h3><p>До встречи в Мона&Ко.</p><button onClick={()=>setSent(false)}>НОВАЯ БРОНЬ</button></motion.div>:<form onSubmit={submit}><label>ИМЯ<input required placeholder="Ваше имя"/></label><div className="two"><label>ДАТА<input required type="date"/></label><label>ВРЕМЯ<input required type="time"/></label></div><div className="two"><label>ГОСТИ<input required type="number" min="1" max="12" placeholder="2"/></label><label>ТЕЛЕФОН<input required type="tel" placeholder="+7 ___ ___ __ __"/></label></div><button className="submit" type="submit">ЗАБРОНИРОВАТЬ <ArrowUpRight/></button></form>}</div></section>}
+function Booking() {
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const form = e.currentTarget;
+
+    const data = {
+      name: form.name.value,
+      date: form.date.value,
+      time: form.time.value,
+      guests: form.guests.value,
+      phone: form.phone.value,
+    };
+
+    try {
+      const response = await fetch("/api/booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Ошибка отправки");
+      }
+
+      setSent(true);
+      form.reset();
+    } catch (error) {
+      alert("Не удалось отправить бронь. Попробуйте ещё раз.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section id="booking" className="booking">
+      <div className="booking-title">
+        <span className="eyebrow">03 / RESERVATION</span>
+        <h2>
+          ЗАБРОНИРОВАТЬ
+          <br />
+          <em>СТОЛ</em>
+        </h2>
+      </div>
+
+      <div className="booking-panel">
+        {sent ? (
+          <motion.div
+            className="success"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <span>✓</span>
+            <h3>Место за вами.</h3>
+            <p>До встречи в Мона&Ко.</p>
+            <button onClick={() => setSent(false)}>
+              НОВАЯ БРОНЬ
+            </button>
+          </motion.div>
+        ) : (
+          <form onSubmit={submit}>
+            <label>
+              ИМЯ
+              <input
+                name="name"
+                required
+                placeholder="Ваше имя"
+              />
+            </label>
+
+            <div className="two">
+              <label>
+                ДАТА
+                <input
+                  name="date"
+                  required
+                  type
 function Location(){return <section id="contact" className="location"><div className="map-art"><div className="map-lines"/><div className="pin"><MapPin/></div><span>45.0228° N<br/>38.9700° E</span></div><div className="location-copy"><span className="eyebrow">04 / FIND US</span><h2>МОНА<span>&</span>КО</h2><p className="address">ул. Домбайская 55к7</p><div className="hours"><span><Clock3/> ПН–ПТ</span><b>09:00–21:00</b><span><Clock3/> СБ–ВС</span><b>09:00–21:00</b></div><a className="route" href="https://yandex.ru/maps/?text=ул.%20Домбайская%2055к7" target="_blank" rel="noreferrer" data-cursor="OPEN">ПОСТРОИТЬ МАРШРУТ <Navigation/></a><a className="phone" href="tel:+70000000000"><Phone/> +7 ХХХ ХХХ ХХ ХХ</a></div></section>}
 function Footer(){return <footer><div className="footer-big">МОНА<span>&</span>КО</div><div className="footer-row"><p>Кофе, который<br/>остаётся с вами.</p><div className="socials"><a href="#">Camera</a><a href="#">Telegram</a><a href="#">VK</a></div><span>© {new Date().getFullYear()} MONA&KO</span></div></footer>}
 function App(){const [open,setOpen]=useState(false);useEffect(()=>{const pre=document.querySelector('.preloader');const t=setTimeout(()=>pre?.classList.add('done'),1500);return()=>clearTimeout(t)},[]);return <><div className="preloader"><div className="pre-dot"/><div className="pre-line"/><div className="pre-logo">МОНА<span>&</span>КО</div></div><Cursor/><Navbar open={open} setOpen={setOpen}/><main><Hero/><Marquee/><Menu/><Philosophy/><Marquee reverse/><Atmosphere/><Booking/><Location/></main><Footer/></>}
