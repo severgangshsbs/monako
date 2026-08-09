@@ -23,13 +23,10 @@ function Atmosphere(){return <section className="atmosphere"><Reveal><div classN
 function Booking() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const submit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     const form = e.currentTarget;
-
     const data = {
       name: form.name.value,
       date: form.date.value,
@@ -37,7 +34,6 @@ function Booking() {
       guests: form.guests.value,
       phone: form.phone.value,
     };
-
     try {
       const response = await fetch("/api/booking", {
         method: "POST",
@@ -46,7 +42,6 @@ function Booking() {
         },
         body: JSON.stringify(data),
       });
-
       if (!response.ok) {
         throw new Error("Ошибка отправки");
       }
